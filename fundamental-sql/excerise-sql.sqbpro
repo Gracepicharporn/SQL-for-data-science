@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/gracepichar/Desktop/SQl/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3268"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,9:maincustomers"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="albums" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="51"/><column index="2" value="300"/><column index="3" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="customers" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="1" mode="0"/></sort><column_widths><column index="1" value="69"/><column index="2" value="63"/><column index="3" value="85"/><column index="4" value="250"/><column index="5" value="226"/><column index="6" value="119"/><column index="7" value="43"/><column index="8" value="89"/><column index="9" value="74"/><column index="10" value="112"/><column index="11" value="112"/><column index="12" value="159"/><column index="13" value="80"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="employees" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="69"/><column index="2" value="59"/><column index="3" value="61"/><column index="4" value="110"/><column index="5" value="63"/><column index="6" value="120"/><column index="7" value="121"/><column index="8" value="157"/><column index="9" value="64"/><column index="10" value="36"/><column index="11" value="50"/><column index="12" value="68"/><column index="13" value="107"/><column index="14" value="107"/><column index="15" value="146"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">/*SELECT... FROM*/
+SELECT 
+	FirstName,
+	LastName AS customer_LAStname
+FROM customers;
+
+SELECT * FROM customers
+WHERE CustomerId &gt;10;
+
+/*INSERT, UPDATE,DELETE*/
+INSERT INTO customers (FirstName,LastName, Email)
+VALUES('Grace', 'Jenjaroenwong','xx@gmail.com');
+
+UPDATE customers
+SET FirstName = 'KAt', LastName = 'uu'
+WHERE CustomerId = 6;
+
+DELETE FROM customers
+WHERE CustomerId = 61;
+
+SELECT COUNT(FirstName)
+FROM customers
+WHERE City = 'Paris';
+
+/*GROUP BY, ODER BY, WHERE ,MAX,MIN, AVG, NOT, IN*/
+SELECT MAX(total)
+FROM invoices;
+
+SELECT MAX(total)
+FROM invoices;
+
+SELECT  count(CustomerId) AS Qrt, Country
+FROM customers
+GROUP BY Country
+ORDER BY Qrt DESC;
+
+SELECT  count(CustomerId) AS Qrt, Country
+FROM customers
+GROUP BY Country
+HAVING count(CustomerId)&gt;=5
+ORDER BY Qrt DESC;
+
+SELECT AVG(UnitPrice)
+FROM tracks;
+
+SELECT (avg(Milliseconds)/1000)/60 AS minute
+FROM tracks;
+
+SELECT AlbumId, (avg(Milliseconds)/1000)/60 AS minute
+FROM tracks
+GROUP BY AlbumId;
+
+SELECT  AlbumId, sum(Milliseconds)/6000 AS minute
+FROM tracks
+GROUP BY AlbumId 
+ORDER BY minute DESC;
+
+
+SELECT *
+FROM employees
+WHERE 
+		Title = 'General Manager' OR 
+		Title ='Sale Manager';
+		
+SELECT *
+FROM employees
+WHERE 
+		NOT Title = 'General Manager' ;
+		
+SELECT *
+FROM employees
+WHERE 
+		Title IN ('General Manager','Sales Support Agent');
+
+		
+SELECT *
+FROM customers
+WHERE 
+		NOT Country IN ('Brazil','USA','Sweden');
+		
+SELECT *
+FROM customers
+WHERE 
+		NOT Country IN ('Brazil','USA','Sweden');
+		
+SELECT *
+FROM customers
+WHERE 
+		FirstName LIKE &quot;%a%t&quot;;
+		
+		
+SELECT * 
+FROM customers
+WHERE
+CustomerId &gt;=10 AND CustomerId &lt;=35;
+
+/*BETWEEN, IS NULL, CASE...THEN*/
+SELECT * 
+FROM customers
+WHERE
+CustomerId BETWEEN 10 AND 35;
+
+SELECT * 
+FROM customers
+WHERE
+CustomerId BETWEEN 1 AND 30
+AND Country IN ('Brazil','Czech Republic');
+
+SELECT * FROM customers
+WHERE 
+Phone IS NULL;
+
+SELECT * FROM customers
+WHERE 
+Phone IS NOT NULL;
+
+SELECT * FROM customers
+WHERE 
+NOT Country = 'USA' AND NOT Country ='Brazil';
+
+SELECT * FROM customers
+WHERE 
+NOT NOT (Country = 'USA' OR  Country ='Brazil');
+
+SELECT invoices.InvoiceId, FirstName, LastName, invoices.total
+FROM invoices
+INNER JOIN customers
+ON invoices.CustomerId = customers.CustomerId
+ORDER BY InvoiceId ASC;
+
+SELECT *
+FROM employees
+INNER JOIN employees AS employees2
+ON employees.ReportsTo =employees2.EmployeeId;
+
+SELECT employees.FirstName, employees.LastName, 
+employees.ReportsTo , employees2.EmployeeId, 
+employees2.FirstName, employees2.LastName
+FROM employees
+INNER JOIN employees AS employees2
+ON employees.ReportsTo =employees2.EmployeeId;
+
+SELECT employees.FirstName, employees.LastName, 
+employees.ReportsTo , employees2.EmployeeId AS employer, 
+employees2.FirstName, employees2.LastName
+FROM employees
+LEFT JOIN employees AS employees2
+ON employees.ReportsTo =employees2.EmployeeId
+
+SELECT InvoiceId, total,
+CASE 
+WHEN total &gt;=10 THEN &quot;AAA&quot;
+WHEN total &lt; 10 AND total &gt; 5 THEN &quot;AA&quot;
+WHEN total  &lt;= 5 THEN  &quot;A&quot;
+ELSE &quot;NONE&quot;
+END As Result
+FROM invoices
+LIMIT 100;
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
